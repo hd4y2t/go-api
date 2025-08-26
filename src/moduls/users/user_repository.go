@@ -33,14 +33,25 @@ func (ur *UserRepositoryImpl) FindById(id int) User {
 	return user
 }
 
-func (ur *UserRepositoryImpl) Create() []User {
+func (ur *UserRepositoryImpl) Create(user User) (*User, error) {
+	result := ur.db.Save(&user)
 
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }
 
-func (ur *UserRepositoryImpl) Update() []User {
-
+func (ur *UserRepositoryImpl) Update(user User) (*User, error) {
 }
 
-func (ur *UserRepositoryImpl) Delete() []User {
+func (ur *UserRepositoryImpl) Delete(user User) (*User, error) {
+	result := ur.db.Delete(&user)
 
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }
