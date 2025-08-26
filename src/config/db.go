@@ -12,11 +12,11 @@ func DB() *gorm.DB {
 	password := ""
 	dbname := "go-api"
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, dbname)
-	var err error
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := user + ":" + password + "@tcp(" + host + ":" + port + ")/" + dbname + "?charset=utf8mb4&parseTime=True&loc=Local"
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("failed to connect to database: %v", err)
+		panic("failed to connect to database")
 	}
 
 	return db
