@@ -1,16 +1,16 @@
 package config
 
 import (
-	"gorm.io/gorm",
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func DB() *gorm.DB {
 	host := "127.0.0.1"
-	port := 3306
+	port := "3306"
 	user := "root"
 	password := ""
-	dbname := "go-api"
+	dbname := "go_api"
 
 	dsn := user + ":" + password + "@tcp(" + host + ":" + port + ")/" + dbname + "?charset=utf8mb4&parseTime=True&loc=Local"
 
