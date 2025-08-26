@@ -34,7 +34,7 @@ func (ur *UserRepositoryImpl) FindById(id int) User {
 }
 
 func (ur *UserRepositoryImpl) Create(user User) (*User, error) {
-	result := ur.db.Save(&user)
+	result := ur.db.Create(&user)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -44,6 +44,13 @@ func (ur *UserRepositoryImpl) Create(user User) (*User, error) {
 }
 
 func (ur *UserRepositoryImpl) Update(user User) (*User, error) {
+	result := ur.db.Save(&user)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }
 
 func (ur *UserRepositoryImpl) Delete(user User) (*User, error) {
