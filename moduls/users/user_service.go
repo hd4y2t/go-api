@@ -1,7 +1,8 @@
 package users
 
 import (
-	dto "go-api/src/moduls/users/dto"
+	dto "go-api/moduls/users/dto"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -58,24 +59,42 @@ func (us *UserServiceImpl) Create(ctx *gin.Context) (*User, error) {
 }
 
 func (us *UserServiceImpl) Update(ctx *gin.Context) (*User, error) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
 	var input dto.UpdateUserInput
 
-	if err := ctx.ShouldBindJSON(&input); err != nil {
+	validate := validator.New()
+	if err := validate.Struct(input); err != nil {
 		return nil, err
 	}
 
 	user := User{
+		ID:    uint(id),
 		Name:  input.Name,
 		Email: input.Email,
 	}
 
-	return us.userRepository.Update(user)
+	result, err := us.userRepository.Update(user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (us *UserServiceImpl) Delete(ctx *gin.Context) (*User, error) {
-	var user User
-	if err := ctx.ShouldBindJSON(&user); err != nil {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	user := User{
+		ID: uint(id),
+	}
+
+	result, err := us.userRepository.Delete(user)
+
+	if err != nil {
 		return nil, err
 	}
-	return us.userRepository.Delete(user)
+
+	return result, nil
 }
