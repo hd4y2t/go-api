@@ -1,7 +1,10 @@
 package users
 
 import (
+	dto "go-api/src/moduls/users/dto"
+
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type UserService interface {
@@ -29,18 +32,43 @@ func (us *UserServiceImpl) GetById(id int) User {
 }
 
 func (us *UserServiceImpl) Create(ctx *gin.Context) (*User, error) {
-	var user User
-	if err := ctx.ShouldBindJSON(&user); err != nil {
+	var input dto.CreateUserInput
+
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		return nil, err
 	}
-	return us.userRepository.Create(user)
+
+	validate := validator.New()
+	if err := validate.Struct(input); err != nil {
+		return nil, err
+	}
+
+	user := User{
+		Name:  input.Name,
+		Email: input.Email,
+	}
+
+	result, err := us.userRepository.Create(user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (us *UserServiceImpl) Update(ctx *gin.Context) (*User, error) {
-	var user User
-	if err := ctx.ShouldBindJSON(&user); err != nil {
+	var input dto.UpdateUserInput
+
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		return nil, err
 	}
+
+	user := User{
+		Name:  input.Name,
+		Email: input.Email,
+	}
+
 	return us.userRepository.Update(user)
 }
 
