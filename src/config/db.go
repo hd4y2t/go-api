@@ -1,7 +1,8 @@
 package config
 
 import (
-	"gorm.io/gorm"
+	"gorm.io/gorm",
+	"gorm.io/driver/mysql"
 )
 
 func DB() *gorm.DB {
